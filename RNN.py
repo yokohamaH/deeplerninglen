@@ -1,18 +1,16 @@
-import numpy as np
-from keras.preprocessing.text import Tokenizer
+from keras.datasets import imdb
+from keras import preprocessing
 
-samples = ['The cat sat on the mat.', 'The dog are my homework']
+max_frtatures = 10000
 
-tokenizer = Tokenizer(num_words=1000)
+max_len = 20
 
-tokenizer.fit_on_texts(samples)
+# それぞれには、出現頻度上位10000の単語がひたすらlistに入れられていく　そのlistが要素になった(25000,)型のベクトル(x_train)
+(x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=max_frtatures)
+print(x_train.shape)
 
-sequence = tokenizer.texts_to_sequence(samples)
+# list上で作ったlistを大きさ20にして残りを削っている残す要素は後ろから20
+x_train = preprocessing.sequence.pad_sequences(x_train, maxlen=max_len)
+x_test = preprocessing.sequence.pad_sequences(x_test, maxlen=max_len)
 
-one_hot_results = tokenizer.texts_to_matrix(samples, mode='binary')
-
-word_index = tokenizer.word_index
-print(word_index)
-print(sequence)
-print(one_hot_results)
-print('Found %s unique tokens.' % len(word_index))
+print(x_train)
